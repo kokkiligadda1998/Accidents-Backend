@@ -29,7 +29,7 @@ let allQueries =
     JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
     JOIN Weather w ON i.Weather_ID = w.Weather_ID 
     JOIN Weather_Condition wc ON w.Weather_Condition_ID = wc.Weather_Condition_ID 
-    WHERE wc.Weather_Condition IS NOT NULL AND  EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS)
+    WHERE wc.Weather_Condition IS NOT NULL AND  EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City in (DBMSCITY) AND i.State in (DBMSSTATE)
     GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
     i.City, i.State, wc.weather_condition ORDER BY Year, State, City, Weather_Condition`,
     Query2: `SELECT i.State AS State, 
