@@ -138,3 +138,25 @@ export const queryHelper6 = async (data) => {
         }
     }
 }
+
+export const queryHelper7 = async () => {
+    try
+    {
+        let conn = await OrclConnection();
+        let result = await conn.execute(allQueries.Query7);
+        conn.close();
+        return {
+            status: 200,
+            isSuccess: true,
+            data: result.rows
+        }
+    }
+    catch(err)
+    {
+        return {
+            status: 500,
+            isSuccess: false,
+            error: err.message
+        }
+    }
+}

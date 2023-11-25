@@ -17,6 +17,7 @@ const config = {
     connectString: 'oracle.cise.ufl.edu:1521/orcl'
 };
 const OrclConnection = () => __awaiter(void 0, void 0, void 0, function* () {
+    oracledb.outFormat = oracledb.OBJECT;
     const conn = yield oracledb.getConnection(config);
     return conn;
 });

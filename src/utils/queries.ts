@@ -280,7 +280,8 @@ let allQueries =
     JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
     WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS)
     GROUP BY i.City, i.State, TO_CHAR(TO_DATE(IT.StartTime, 'YYYY-MM-DD HH24:MI:SS'), 'HH24')
-    ORDER BY Num_Incidents DESC;`
+    ORDER BY Num_Incidents DESC;`,
+    Query7:`select city,state from incident group by city, state`
 }
 
 export {allQueries};

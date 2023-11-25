@@ -6,6 +6,7 @@ const config = {
 }
 
 export const OrclConnection = async () => {
+    oracledb.outFormat = oracledb.OBJECT;
     const conn = await oracledb.getConnection(config);
     return conn;
 }

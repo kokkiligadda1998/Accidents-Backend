@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.query1 = void 0;
+exports.query7 = exports.query6 = exports.query5 = exports.query4 = exports.query3 = exports.query2 = exports.query1 = void 0;
 const aHelper = __importStar(require("../helpers/aHelper"));
 const query1 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reqBody = req.body;
@@ -51,4 +51,105 @@ const query1 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.query1 = query1;
+const query2 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const reqBody = req.body;
+    try {
+        const result = yield aHelper.queryHelper2(reqBody);
+        if (result.isSuccess) {
+            res.status(result.status).send({ isSuccess: result.isSuccess, data: result.data });
+        }
+        else {
+            res.status(result.status).send({ isSuccess: result.isSuccess, err: result.error });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({ isSuccess: false, err: error.message });
+    }
+});
+exports.query2 = query2;
+const query3 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const reqBody = req.body;
+    try {
+        const result = yield aHelper.queryHelper3(reqBody);
+        if (result.isSuccess) {
+            res.status(result.status).send({ isSuccess: result.isSuccess, data: result.data });
+        }
+        else {
+            res.status(result.status).send({ isSuccess: result.isSuccess, err: result.error });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({ isSuccess: false, err: error.message });
+    }
+});
+exports.query3 = query3;
+const query4 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const reqBody = req.body;
+    try {
+        const result = yield aHelper.queryHelper4(reqBody);
+        if (result.isSuccess) {
+            res.status(result.status).send({ isSuccess: result.isSuccess, data: result.data });
+        }
+        else {
+            res.status(result.status).send({ isSuccess: result.isSuccess, err: result.error });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({ isSuccess: false, err: error.message });
+    }
+});
+exports.query4 = query4;
+const query5 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const reqBody = req.body;
+    try {
+        const result = yield aHelper.queryHelper5(reqBody);
+        if (result.isSuccess) {
+            res.status(result.status).send({ isSuccess: result.isSuccess, data: result.data });
+        }
+        else {
+            res.status(result.status).send({ isSuccess: result.isSuccess, err: result.error });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({ isSuccess: false, err: error.message });
+    }
+});
+exports.query5 = query5;
+const query6 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const reqBody = req.body;
+    try {
+        const result = yield aHelper.queryHelper6(reqBody);
+        if (result.isSuccess) {
+            res.status(result.status).send({ isSuccess: result.isSuccess, data: result.data });
+        }
+        else {
+            res.status(result.status).send({ isSuccess: result.isSuccess, err: result.error });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({ isSuccess: false, err: error.message });
+    }
+});
+exports.query6 = query6;
+const query7 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield aHelper.queryHelper7();
+        if (result.isSuccess) {
+            res.status(result.status).send({ isSuccess: result.isSuccess, data: result.data });
+        }
+        else {
+            res.status(result.status).send({ isSuccess: result.isSuccess, err: result.error });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({ isSuccess: false, err: error.message });
+    }
+});
+exports.query7 = query7;
 //# sourceMappingURL=aController.js.map
