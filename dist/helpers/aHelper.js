@@ -43,6 +43,12 @@ const queryHelper2 = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let conn = yield (0, connection_1.OrclConnection)();
         let query = queries_1.allQueries.Query2.replace("DBMS", data.Year);
+        const cityArray = data.City.split(',').map(city => `'${city.trim()}'`);
+        const citiesInQuotes = cityArray.join(', ');
+        query = query.replace("DBMSCITY", citiesInQuotes);
+        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
+        const stateInQuotes = stateArray.join(', ');
+        query = query.replace("DBMSSTATE", stateInQuotes);
         let result = yield conn.execute(query);
         conn.close();
         return {
@@ -117,7 +123,10 @@ exports.queryHelper4 = queryHelper4;
 const queryHelper5 = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let conn = yield (0, connection_1.OrclConnection)();
-        let query = queries_1.allQueries.Query5.replace("DBMS", data.Year);
+        let query = queries_1.allQueries.Query5.replace(/DBMS/g, data.Year);
+        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
+        const stateInQuotes = stateArray.join(', ');
+        query = query.replace(/Q5STATE/g, stateInQuotes);
         let result = yield conn.execute(query);
         conn.close();
         return {

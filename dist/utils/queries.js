@@ -33,7 +33,7 @@ let allQueries = {
     WHERE wc.Weather_Condition IS NOT NULL AND  EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City in (DBMSCITY) AND i.State in (DBMSSTATE)
     GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
     i.City, i.State, wc.weather_condition ORDER BY Year, State, City, Weather_Condition`,
-    Query2: `SELECT i.State AS State, 
+    Query2: `SELECT i.City AS City,i.State AS State, 
     EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) AS Year, 
     CASE WHEN EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (2020, 2021, 2022) THEN 'Yes' ELSE 'No' END AS COVID_Status, 
     COUNT(DISTINCT i.Incident_ID) AS Number_of_Accidents, 
@@ -41,24 +41,24 @@ let allQueries = {
     ROUND((COUNT(DISTINCT i.Incident_ID) - (SELECT AVG(Number_of_Accidents) FROM (SELECT COUNT(DISTINCT i.Incident_ID) AS Number_of_Accidents 
     FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
     GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    i.State))) * 100 / (SELECT AVG(Number_of_Accidents) 
+    i.City,i.State))) * 100 / (SELECT AVG(Number_of_Accidents) 
     FROM (SELECT COUNT(DISTINCT i.Incident_ID) AS Number_of_Accidents 
     FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
     GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    i.State)), 2) AS Percentage_Diff_AvgAccidents, 
+    i.City,i.State)), 2) AS Percentage_Diff_AvgAccidents, 
     ROUND((AVG(i.Severity) - (SELECT AVG(Average_Severity) 
     FROM (SELECT AVG(i.Severity) AS Average_Severity 
     FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
     GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    i.State))) * 100 / (SELECT AVG(Average_Severity) 
+    i.City,i.State))) * 100 / (SELECT AVG(Average_Severity) 
     FROM (SELECT AVG(i.Severity) AS Average_Severity FROM Incident i 
     JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
     GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    i.State)), 2) AS Percentage_Diff_AvgSeverity 
+    i.City,i.State)), 2) AS Percentage_Diff_AvgSeverity 
     FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
-    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS)
-    GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
-    ORDER BY Year, State`,
+    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City in (DBMSCITY) AND i.State in (DBMSSTATE)
+    GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.City,i.State
+    ORDER BY Year, City, State`,
     Query3: `SELECT CASE WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (12, 1, 2) THEN 'Winter' 
     WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
     WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
@@ -145,7 +145,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT State, Year, 'Crossing', Avg_Severity, Count
     FROM (
@@ -159,7 +159,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT State,Year, 'Junction', Avg_Severity, Count
     FROM (
@@ -173,7 +173,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT State,Year,'Roundabout', Avg_Severity, Count
     FROM (
@@ -187,7 +187,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT  State,Year, 'Give_way', Avg_Severity, Count
     FROM (
@@ -201,7 +201,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT  State,Year, 'No_exit', Avg_Severity, Count
     FROM (
@@ -215,7 +215,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')),i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT State,Year, 'Railway', Avg_Severity, Count
     FROM (
@@ -229,7 +229,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT  State,Year, 'Station', Avg_Severity, Count
     FROM (
@@ -243,7 +243,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT State,Year, 'Stop', Avg_Severity, Count
     FROM (
@@ -257,7 +257,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT State,Year, 'Traffic_signal', Avg_Severity, Count
     FROM (
@@ -271,7 +271,7 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')),i.State
     )
-    WHERE Count <> 0
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
     UNION
     SELECT State,Year, 'Turning_loop', Avg_Severity, Count
     FROM (
@@ -285,8 +285,8 @@ let allQueries = {
       JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
       GROUP BY EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')),i.State
     )
-    WHERE Count <> 0
-    ORDER BY Year;`,
+    WHERE Count <> 0 AND State in (Q5STATE) AND Year IN (DBMS)
+    ORDER BY Year`,
     Query6: `SELECT i.City, i.State, TO_CHAR(TO_DATE(IT.StartTime, 'YYYY-MM-DD HH24:MI:SS'), 'HH24') AS Hour, 
     COUNT(i.Incident_ID) AS Num_Incidents
     FROM Incident i

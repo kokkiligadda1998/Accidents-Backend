@@ -34,7 +34,13 @@ export const queryHelper2 = async (data) => {
     try
     {
         let conn = await OrclConnection();
-        let query = allQueries.Query2.replace("DBMS", data.Year)
+        let query = allQueries.Query2.replace("DBMS", data.Year);
+        const cityArray = data.City.split(',').map(city => `'${city.trim()}'`);
+        const citiesInQuotes = cityArray.join(', ');
+        query = query.replace("DBMSCITY", citiesInQuotes);
+        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
+        const stateInQuotes = stateArray.join(', ');
+        query = query.replace("DBMSSTATE", stateInQuotes)
         let result = await conn.execute(query);
         conn.close();
         return {
@@ -115,7 +121,10 @@ export const queryHelper5 = async (data) => {
     try
     {
         let conn = await OrclConnection();
-        let query = allQueries.Query5.replace("DBMS", data.Year)
+        let query = allQueries.Query5.replace(/DBMS/g, data.Year)
+        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
+        const stateInQuotes = stateArray.join(', ');
+        query = query.replace(/Q5STATE/g, stateInQuotes)
         let result = await conn.execute(query);
         conn.close();
         return {
