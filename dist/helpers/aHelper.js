@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryHelper7 = exports.queryHelper6 = exports.queryHelper5 = exports.queryHelper4 = exports.queryHelper3 = exports.queryHelper2 = exports.queryHelper1 = void 0;
+exports.queryHelper8 = exports.queryHelper7 = exports.queryHelper6 = exports.queryHelper5 = exports.queryHelper4 = exports.queryHelper3 = exports.queryHelper2 = exports.queryHelper1 = void 0;
 const connection_1 = require("../utils/connection");
 const queries_1 = require("../utils/queries");
 const queryHelper1 = (data) => __awaiter(void 0, void 0, void 0, function* () {
@@ -64,6 +64,12 @@ const queryHelper3 = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let conn = yield (0, connection_1.OrclConnection)();
         let query = queries_1.allQueries.Query3.replace("DBMS", data.Year);
+        const cityArray = data.City.split(',').map(city => `'${city.trim()}'`);
+        const citiesInQuotes = cityArray.join(', ');
+        query = query.replace("DBMSCITY", citiesInQuotes);
+        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
+        const stateInQuotes = stateArray.join(', ');
+        query = query.replace("DBMSSTATE", stateInQuotes);
         let result = yield conn.execute(query);
         conn.close();
         return {
@@ -85,6 +91,12 @@ const queryHelper4 = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let conn = yield (0, connection_1.OrclConnection)();
         let query = queries_1.allQueries.Query4.replace("DBMS", data.Year);
+        const cityArray = data.City.split(',').map(city => `'${city.trim()}'`);
+        const citiesInQuotes = cityArray.join(', ');
+        query = query.replace("DBMSCITY", citiesInQuotes);
+        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
+        const stateInQuotes = stateArray.join(', ');
+        query = query.replace("DBMSSTATE", stateInQuotes);
         let result = yield conn.execute(query);
         conn.close();
         return {
@@ -164,4 +176,27 @@ const queryHelper7 = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.queryHelper7 = queryHelper7;
+const queryHelper8 = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let conn = yield (0, connection_1.OrclConnection)();
+        let result = yield conn.execute(queries_1.allQueries.Query9);
+        let data = result.rows;
+        let sum = result.rows.reduce((acc, row) => acc + row.TABLE_COUNT, 0);
+        data.push({ TOTAL_COUNT: "TOTAL COUNT", SUM: sum });
+        conn.close();
+        return {
+            status: 200,
+            isSuccess: true,
+            data: result.rows
+        };
+    }
+    catch (err) {
+        return {
+            status: 500,
+            isSuccess: false,
+            error: err.message
+        };
+    }
+});
+exports.queryHelper8 = queryHelper8;
 //# sourceMappingURL=aHelper.js.map

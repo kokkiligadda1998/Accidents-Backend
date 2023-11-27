@@ -164,3 +164,23 @@ export const query7 = async (req, res) => {
         res.status(500).send({isSuccess: false, err: error.message});
     }
 };
+
+export const query8 = async (req, res) => {
+
+    try {
+        const result = await aHelper.queryHelper8();
+        if(result.isSuccess)
+        {
+            res.status(result.status).send({isSuccess: result.isSuccess, data: result.data});
+        }
+        else
+        {
+            res.status(result.status).send({isSuccess: result.isSuccess, err: result.error});
+        }
+    }
+    catch (error) {
+
+        console.log(error.message)
+        res.status(500).send({isSuccess: false, err: error.message});
+    }
+};

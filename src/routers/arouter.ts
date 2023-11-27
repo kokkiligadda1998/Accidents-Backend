@@ -9,5 +9,6 @@ router.post('/query4', aController.query4);
 router.post('/query5', aController.query5);
 router.post('/query6', aController.query6);
 router.get('/query7', aController.query7);
+router.get('/query8', aController.query8);
 
 export default router;

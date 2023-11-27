@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.query7 = exports.query6 = exports.query5 = exports.query4 = exports.query3 = exports.query2 = exports.query1 = void 0;
+exports.query8 = exports.query7 = exports.query6 = exports.query5 = exports.query4 = exports.query3 = exports.query2 = exports.query1 = void 0;
 const aHelper = __importStar(require("../helpers/aHelper"));
 const query1 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reqBody = req.body;
@@ -152,4 +152,20 @@ const query7 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.query7 = query7;
+const query8 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield aHelper.queryHelper8();
+        if (result.isSuccess) {
+            res.status(result.status).send({ isSuccess: result.isSuccess, data: result.data });
+        }
+        else {
+            res.status(result.status).send({ isSuccess: result.isSuccess, err: result.error });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({ isSuccess: false, err: error.message });
+    }
+});
+exports.query8 = query8;
 //# sourceMappingURL=aController.js.map

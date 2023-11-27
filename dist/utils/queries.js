@@ -63,32 +63,44 @@ let allQueries = {
     WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
     WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
     WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (9, 10, 11) THEN 'Fall' END AS Season, 
-    EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) AS Month, 
-    EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) AS Year,
+    i.City, i.State, EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) AS Year, 
     COUNT(DISTINCT i.Incident_ID) AS Number_of_Incidents, 
     ROUND(COUNT(i.Incident_ID) * 100.0 / SUM(COUNT(i.Incident_ID)) 
-    OVER (PARTITION BY EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI'))), 2) AS Percentage_of_Incidents, 
+    OVER (PARTITION BY CASE WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (12, 1, 2) THEN 'Winter' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (9, 10, 11) THEN 'Fall' END, i.City, i.State), 2) AS Percentage_of_Incidents, 
     ROUND((COUNT(DISTINCT i.Incident_ID) - (SELECT AVG(Number_of_Incidents) 
     FROM (SELECT COUNT(DISTINCT i.Incident_ID) AS Number_of_Incidents 
     FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
-    GROUP BY EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI'))))) * 100 / (SELECT AVG(Number_of_Incidents) 
+    GROUP BY CASE WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (12, 1, 2) THEN 'Winter' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (9, 10, 11) THEN 'Fall' END, i.City, i.State, EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI'))))) * 100 / (SELECT AVG(Number_of_Incidents) 
     FROM (SELECT COUNT(DISTINCT i.Incident_ID) AS Number_of_Incidents 
     FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
-    GROUP BY EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')))), 2) AS Percentage_Diff_Avg_NoofIncidents, 
+    GROUP BY CASE WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (12, 1, 2) THEN 'Winter' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (9, 10, 11) THEN 'Fall' END, i.City, i.State, EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')))), 2) AS Percentage_Diff_Avg_NoofIncidents, 
     ROUND(AVG(i.Severity),2) AS Average_Severity, ROUND((AVG(i.Severity) - (SELECT AVG(Average_Severity) 
     FROM (SELECT AVG(i.Severity) AS Average_Severity FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
-    GROUP BY EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI'))))) * 100 / (SELECT AVG(Average_Severity) 
+    GROUP BY CASE WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (12, 1, 2) THEN 'Winter' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (9, 10, 11) THEN 'Fall' END, i.City, i.State, EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI'))))) * 100 / (SELECT AVG(Average_Severity) 
     FROM (SELECT AVG(i.Severity) AS Average_Severity FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
-    GROUP BY EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')))), 2) AS Percentage_Diff_Avg_Severity 
+    GROUP BY CASE WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (12, 1, 2) THEN 'Winter' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (9, 10, 11) THEN 'Fall' END, i.City, i.State, EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')))), 2) AS Percentage_Diff_Avg_Severity 
     FROM Incident i JOIN Incident_times it ON i.Incident_ID = it.Incident_ID 
-    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) GROUP BY 
-    EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')), 
-    EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) 
-    ORDER BY Year, Month`,
+    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City in (DBMSCITY) AND i.State in (DBMSSTATE)
+    GROUP BY CASE WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (12, 1, 2) THEN 'Winter' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (3, 4, 5) THEN 'Spring' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (6, 7, 8) THEN 'Summer' 
+    WHEN EXTRACT(MONTH FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) IN (9, 10, 11) THEN 'Fall' END, i.City, i.State, EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) 
+    ORDER BY Year, State, City, Season`,
     Query4: `SELECT c.City AS City, 
     c.State AS State,
     c.Population_Density AS Population_Density,
@@ -117,7 +129,7 @@ let allQueries = {
     JOIN location l ON c.location_id = l.location_id
     JOIN address a ON l.location_id = a.location_id
     JOIN Coordinate co on co.Address_ID = a.Address_ID
-    WHERE c.Population_Density IS NOT NULL and EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS)
+    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City in (DBMSCITY) AND i.State in (DBMSSTATE)
     GROUP BY c.Population_Density, c.City,c.State, co.Latitude,co.Longitude,
     EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) 
     ORDER BY Year, c.Population_Density, City, State`,
@@ -282,7 +294,43 @@ let allQueries = {
     WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS)
     GROUP BY i.City, i.State, TO_CHAR(TO_DATE(IT.StartTime, 'YYYY-MM-DD HH24:MI:SS'), 'HH24')
     ORDER BY Num_Incidents DESC;`,
-    Query7: `select city,state from incident group by city, state`
+    Query7: `select city,state from incident group by city, state`,
+    Query8: `SELECT
+    (SELECT COUNT(*) FROM ADDRESS) +
+    (SELECT COUNT(*) FROM AFFECTED_BY) +
+    (SELECT COUNT(*) FROM COORDINATE) +
+    (SELECT COUNT(*) FROM INCIDENT) +
+    (SELECT COUNT(*) FROM INCIDENT_TIMES) +
+    (SELECT COUNT(*) FROM INVOLVES) +
+    (SELECT COUNT(*) FROM LOCATION) +
+    (SELECT COUNT(*) FROM ROAD_FEATURE) +
+    (SELECT COUNT(*) FROM ROAD_TYPE) +
+    (SELECT COUNT(*) FROM WEATHER) +
+    (SELECT COUNT(*) FROM WEATHER_CONDITION) +
+    (SELECT COUNT(*) FROM POPULATION) AS total_count from DUAL`,
+    Query9: `SELECT 'ADDRESS' AS table_name, COUNT(*) AS table_count FROM ADDRESS
+    UNION
+    SELECT 'AFFECTED_BY' AS table_name, COUNT(*) AS table_count FROM AFFECTED_BY
+    UNION
+    SELECT 'COORDINATE' AS table_name, COUNT(*) AS table_count FROM COORDINATE
+    UNION
+    SELECT 'INCIDENT' AS table_name, COUNT(*) AS table_count FROM INCIDENT
+    UNION
+    SELECT 'INCIDENT_TIMES' AS table_name, COUNT(*) AS table_count FROM INCIDENT_TIMES
+    UNION
+    SELECT 'INVOLVES' AS table_name, COUNT(*) AS table_count FROM INVOLVES
+    UNION
+    SELECT 'LOCATION' AS table_name, COUNT(*) AS table_count FROM LOCATION
+    UNION
+    SELECT 'ROAD_FEATURE' AS table_name, COUNT(*) AS table_count FROM ROAD_FEATURE
+    UNION
+    SELECT 'ROAD_TYPE' AS table_name, COUNT(*) AS table_count FROM ROAD_TYPE
+    UNION
+    SELECT 'WEATHER' AS table_name, COUNT(*) AS table_count FROM WEATHER
+    UNION
+    SELECT 'WEATHER_CONDITION' AS table_name, COUNT(*) AS table_count FROM WEATHER_CONDITION
+    UNION
+    SELECT 'POPULATION' AS table_name, COUNT(*) AS table_count FROM POPULATION`
 };
 exports.allQueries = allQueries;
 //# sourceMappingURL=queries.js.map
