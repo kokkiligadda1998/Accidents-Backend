@@ -99,10 +99,7 @@ const queryHelper4 = (data) => __awaiter(void 0, void 0, void 0, function* () {
         let query = queries_1.allQueries.Query4.replace("DBMS", data.Year);
         const cityArray = data.City.split(',').map(city => `'${city.trim()}'`);
         const citiesInQuotes = cityArray.join(', ');
-        query = query.replace("DBMSCITY", citiesInQuotes);
-        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
-        const stateInQuotes = stateArray.join(', ');
-        query = query.replace("DBMSSTATE", stateInQuotes);
+        query = query.replace("DBMSCITYSTATE", citiesInQuotes);
         let result = yield conn.execute(query);
         conn.close();
         return {
@@ -148,6 +145,12 @@ const queryHelper6 = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let conn = yield (0, connection_1.OrclConnection)();
         let query = queries_1.allQueries.Query6.replace("DBMS", data.Year);
+        const cityArray = data.City.split(',').map(city => `'${city.trim()}'`);
+        const citiesInQuotes = cityArray.join(', ');
+        query = query.replace("DBMSCITY", citiesInQuotes);
+        const stateArray = data.State.split(',').map(state => `'${state.trim()}'`);
+        const stateInQuotes = stateArray.join(', ');
+        query = query.replace("DBMSSTATE", stateInQuotes);
         let result = yield conn.execute(query);
         conn.close();
         return {

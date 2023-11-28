@@ -128,7 +128,7 @@ let allQueries =
     JOIN location l ON c.location_id = l.location_id
     JOIN address a ON l.location_id = a.location_id
     JOIN Coordinate co on co.Address_ID = a.Address_ID
-    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City in (DBMSCITY) AND i.State in (DBMSSTATE)
+    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City || ':' || i.state in (DBMSCITYSTATE)
     GROUP BY c.Population_Density, c.City,c.State, co.Latitude,co.Longitude,
     EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) 
     ORDER BY Year, c.Population_Density, City, State`,
@@ -290,9 +290,9 @@ let allQueries =
     COUNT(i.Incident_ID) AS Num_Incidents
     FROM Incident i
     JOIN Incident_times it ON i.Incident_ID = it.Incident_ID
-    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS)
+    WHERE EXTRACT(YEAR FROM TO_DATE(it.StartTime, 'YYYY-MM-DD HH24:MI')) in (DBMS) AND i.City in (DBMSCITY) AND i.State in (DBMSSTATE)
     GROUP BY i.City, i.State, TO_CHAR(TO_DATE(IT.StartTime, 'YYYY-MM-DD HH24:MI:SS'), 'HH24')
-    ORDER BY Num_Incidents DESC;`,
+    ORDER BY Hour`,
     Query7:`select city,state from incident group by city, state`,
     Query8:`SELECT
     (SELECT COUNT(*) FROM ADDRESS) +
